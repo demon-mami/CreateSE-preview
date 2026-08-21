@@ -1,0 +1,94 @@
+name: Deploy CreateSE Preview
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout preview configuration
+        uses: actions/checkout@v6
+
+      - name: Resolve pinned source revision
+        id: source
+        shell: bash
+        run: |
+          source_sha="$(tr -d '[:space:]' < preview-source-sha.txt)"
+          if [[ ! "$source_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Invalid source SHA: $source_sha" >&2
+            exit 1
+          fi
+          echo "sha=$source_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout PR source revision
+        uses: actions/checkout@v6
+        with:
+          repository: demon-mami/CreateSE
+          ref: ${{ steps.source.outputs.sha }}
+          path: _source
+          persist-credentials: false
+
+      - name: Verify pinned revision
+        shell: bash
+        run: |
+          actual_sha="$(git -C _source rev-parse HEAD)"
+          test "$actual_sha" = "${{ steps.source.outputs.sha }}"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Prepare preview site
+        shell: bash
+        run: |
+          mkdir -p _site/vendor _site/maps
+          cp _source/index.html _site/
+          cp _source/style.css _site/
+          cp _source/theme-col07.css _site/
+          cp _source/hitsound-grid.css _site/
+          cp _source/workbench.css _site/
+          cp _source/candidates.js _site/
+          cp _source/candidate-numbering.js _site/
+          cp _source/charts.js _site/
+          cp _source/chart-loader.js _site/
+          cp _source/audio-ducking-bridge.js _site/
+          cp _source/app-v4.js _site/
+          cp _source/hitsound-controller.js _site/
+          cp _source/hitsound-favorites.js _site/
+          cp _source/hitsound-grid.js _site/
+          cp _source/workbench-ui.js _site/
+          cp _source/object-timeline-v2.js _site/
+          cp _source/hitsounds-single-base-116.zip _site/
+          cp _source/maps.zip _site/
+          cp _source/vendor/jszip.min.js _site/vendor/
+
+          cat _source/.map-assets/maps-added-*.part > /tmp/maps-added.zip
+          (cd /tmp && sha256sum -c "$GITHUB_WORKSPACE/_source/.map-assets/maps-added.sha256")
+          unzip -q /tmp/maps-added.zip -d _site/maps
+
+          touch _site/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./_site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
