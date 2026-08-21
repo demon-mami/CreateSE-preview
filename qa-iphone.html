@@ -28,7 +28,11 @@
   <iframe
     id="iphoneViewport"
     title="CreateSE iPhone縦 390 × 844 QA viewport"
-    src="./?qa-viewport=iphone-390x844"
   ></iframe>
+  <script>
+    const build = new URLSearchParams(location.search).get('qa') || 'current';
+    document.getElementById('iphoneViewport').src =
+      './?qa-viewport=iphone-390x844&build=' + encodeURIComponent(build);
+  </script>
 </body>
 </html>
