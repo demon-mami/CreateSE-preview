@@ -67,7 +67,6 @@ jobs:
           cp _source/candidate-numbering.js _site/
           cp _source/charts.js _site/
           cp _source/chart-loader.js _site/
-          cp _source/audio-ducking-bridge.js _site/
           cp _source/app-v4.js _site/
           cp _source/hitsound-controller.js _site/
           cp _source/hitsound-favorites.js _site/
