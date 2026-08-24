@@ -37,7 +37,7 @@ jobs:
           fi
           echo "sha=$source_sha" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout PR source revision
+      - name: Checkout pinned CreateSE source revision
         uses: actions/checkout@v6
         with:
           repository: demon-mami/CreateSE
@@ -70,10 +70,12 @@ jobs:
           cp _source/app-v4.js _site/
           cp _source/hitsound-controller.js _site/
           cp _source/hitsound-favorites.js _site/
+          cp _source/favorite-slot-ui.js _site/
+          cp _source/favorite-pager-v4.js _site/
           cp _source/hitsound-grid.js _site/
           cp _source/workbench-ui.js _site/
           cp _source/object-timeline-v2.js _site/
-          cp _source/hitsounds-single-base-116.zip _site/
+          cp _source/hitsounds-current111-abc-v5.zip _site/
           cp _source/maps.zip _site/
           cp _source/vendor/jszip.min.js _site/vendor/
 
