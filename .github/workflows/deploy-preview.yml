@@ -84,6 +84,10 @@ jobs:
           (cd /tmp && sha256sum -c "$GITHUB_WORKSPACE/_source/.map-assets/maps-added.sha256")
           unzip -q /tmp/maps-added.zip -d _site/maps
 
+          cat _source/.map-assets/maps-wave-20260826-*.part > /tmp/maps-wave-20260826.zip
+          (cd /tmp && sha256sum -c "$GITHUB_WORKSPACE/_source/.map-assets/maps-wave-20260826.sha256")
+          unzip -q /tmp/maps-wave-20260826.zip -d _site/maps
+
           cp qa-iphone.html _site/
           cp preview-source-sha.txt _site/
           touch _site/.nojekyll
