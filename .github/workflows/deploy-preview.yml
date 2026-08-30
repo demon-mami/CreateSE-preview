@@ -96,6 +96,10 @@ jobs:
           (cd /tmp && sha256sum -c "$GITHUB_WORKSPACE/_source/.map-assets/maps-wave-20260830-intertwined.sha256")
           unzip -q /tmp/maps-wave-20260830-intertwined.zip -d _site/maps
 
+          cat _source/.map-assets/maps-wave-20260830-oniichan-*.part > /tmp/maps-wave-20260830-oniichan.zip
+          (cd /tmp && sha256sum -c "$GITHUB_WORKSPACE/_source/.map-assets/maps-wave-20260830-oniichan.sha256")
+          unzip -q /tmp/maps-wave-20260830-oniichan.zip -d _site/maps
+
           cat _source/.map-assets/maps-shuuten-fix-20260826-*.part > /tmp/maps-shuuten-fix-20260826.zip
           (cd /tmp && sha256sum -c "$GITHUB_WORKSPACE/_source/.map-assets/maps-shuuten-fix-20260826.sha256")
           unzip -qo /tmp/maps-shuuten-fix-20260826.zip -d _site/maps
